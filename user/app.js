@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({ path: '.env.local' }); // Load environment variables from .env.local file
 const express =require('express');
 const app = express();
 const userRoutes = require('./routes/user.routes.js');

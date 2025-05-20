@@ -1,0 +1,49 @@
+
+services:  
+
+  # ------------------- MongoDB for User Service -------------------
+  mongo-user:  
+    image: mongo  # Use the official MongoDB image
+    container_name: mongo-user  # Name the container
+    ports:
+      - "27017:27017"  # Maps local port 27017 to container's 27017
+    volumes:
+      - user-db-data:/data/db
+
+  # ------------------- User Backend Service -------------------
+  user-service:  
+    build: ./user  # dockerfile inside user folder
+    ports:
+      - "3001:3000"  # mapping it to 3001 port
+    volumes:
+      - ./user:/app  # Sync local code with container
+    environment:
+      - MONGO_URI=mongodb://mongo-user:27017/user-db  # MongoDB connection string
+    depends_on:
+      - mongo-user  # Ensure MongoDB starts before this service
+
+  # ------------------- MongoDB for Captain Service -------------------
+  mongo-captain:  # Another MongoDB instance
+    image: mongo
+    container_name: mongo-captain
+    ports:
+      - "27018:27017"  # Maps local port 27018 to container's 27017 
+    volumes:
+      - captain-db-data:/data/db  # Separate volume for captain MongoDB data
+
+  # ------------------- Captain Backend Service -------------------
+  captain-service:  # Container for the captain microservice backend
+    build: ./captain  # Dockerfile is located in the ./captain-service directory
+    ports:
+      - "3002:3000"  # Access captain-service at localhost:3003
+    volumes:
+      - ./captain:/app  # Sync local code
+    environment:
+      - MONGO_URI=mongodb://mongo-captain:27017/captain-db  # Connection string for captain’s MongoDB
+    depends_on:
+      - mongo-captain  # Ensure its MongoDB starts before the service
+
+# ------------------- Volumes Section -------------------
+volumes:
+  user-db-data:   
+  captain-db-data: 

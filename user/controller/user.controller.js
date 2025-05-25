@@ -73,3 +73,11 @@ module.exports.profile = async (req, res) => {
         res.status(500).json({error:error.message});
     }
 }
+
+module.exports.intro = async (req, res) => {
+    try {
+        res.status(200).json({message: 'Welcome to the User API!'});
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+}

@@ -35,7 +35,7 @@ services:
   captain-service:  # Container for the captain microservice backend
     build: ./captain  # Dockerfile is located in the ./captain-service directory
     ports:
-      - "3002:3000"  # Access captain-service at localhost:3003
+      - "3002:3000"  # Access captain-service at localhost:3002
     volumes:
       - ./captain:/app  # Sync local code
     environment:
@@ -43,7 +43,30 @@ services:
     depends_on:
       - mongo-captain  # Ensure its MongoDB starts before the service
 
+  # ------------------- Ride Service Mongodb -------------------
+  mongo-ride:  
+    image: mongo
+    container_name: mongo-ride
+    ports:
+      - "27019:27017"  # Maps local port 27019 to container's 27017
+    volumes:
+      - ride-db-data:/data/db  # Volume for ride service MongoDB data
+
+  # ------------------- Ride Backend Service -------------------
+  ride-service:  
+    build: ./ride  # Dockerfile is in the ./ride directory
+    ports:
+      - "3003:3000"  # Maps local port 3003 to container's 3000
+    volumes:
+      - ./ride:/app  # Sync local code with container
+    environment:
+      - MONGO_URI=mongodb://mongo-ride:27017/ride-db  # MongoDB connection string for ride service
+    depends_on:
+      - mongo-ride  # Ensure MongoDB starts before this service
+
+
 # ------------------- Volumes Section -------------------
 volumes:
   user-db-data:   
   captain-db-data: 
+  ride-db-data:   # Define volumes for persistent data storage

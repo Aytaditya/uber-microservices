@@ -8,5 +8,6 @@ router.post('/login',userController.login);
 router.get('/logout',userController.logout);
 router.get('/profile',authMiddleware.authMiddleware,userController.profile);
 router.patch('/toggle-availability',authMiddleware.authMiddleware,userController.toggleAvailability);
+router.get('/',userController.intro);
 
 module.exports=router;

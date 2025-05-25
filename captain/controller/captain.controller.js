@@ -73,3 +73,14 @@ module.exports.profile = async (req, res) => {
         res.status(500).json({error:error.message});
     }
 }
+
+module.exports.toggleAvailability = async (req, res) => {
+    try {
+        const user = req.user; // User is already set by authMiddleware
+        user.isAvailable = !user.isAvailable; // Toggle availability
+        await user.save();
+        res.status(200).json({message:'Availability toggled successfully',isAvailable:user.isAvailable});
+    } catch (error) {
+        res.status(500).json({error:error.message});
+    }
+}

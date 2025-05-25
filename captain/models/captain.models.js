@@ -13,6 +13,10 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    isAvailable:{
+        type:Boolean,
+        default:false
+    }
 })
 
 module.exports=mongoose.model('Captain',userSchema);
